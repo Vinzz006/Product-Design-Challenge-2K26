@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Design Challenge '26 — MSEC</title>
+<meta name="description" content="30-hour hackathon at Meenakshi Sundararajan Engineering College. Building, moving, wiring — innovate together.">
+<meta property="og:title" content="Product Design Challenge '26">
+<meta property="og:description" content="A 30-hour hackathon at Meenakshi Sundararajan Engineering College. ₹15,000 prize pool.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23070b14'/%3E%3Cpath d='M4 4h24v24H4z' fill='none' stroke='%23ffb238' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='5' fill='none' stroke='%234fd1c5' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ================= HERO ================= */
+  .hero{
+    min-height:100svh; display:flex; flex-direction:column; justify-content:center;
+    padding-top:110px; padding-bottom:40px; position:relative; overflow:hidden;
+  }
+  .spotlight{
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,20%), rgba(79,209,197,0.10), transparent 70%);
+  }
+  .hero-circuit{ position:absolute; inset:0; z-index:0; opacity:0.5; pointer-events:none; }
+  .hero-circuit path{ fill:none; stroke:var(--line-strong); stroke-width:1; }
+  .hero-circuit circle{ fill:var(--teal); opacity:0.6; }
+  .hero .wrap{width:100%; position:relative; z-index:1;}
+  .presents{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--ink-500); margin-bottom:26px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .presents strong{color:var(--teal); font-weight:600;}
+  .hero h1{ font-size:clamp(40px,8vw,96px); line-height:0.98; letter-spacing:-0.02em; max-width:980px; }
+  .hero h1 em{ font-style:normal; position:relative; background:var(--grad-primary); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
+  .hero-sub{ margin-top:26px; max-width:560px; color:var(--ink-300); font-size:17px; }
+  .hero-actions{ margin-top:40px; display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+
+  .countdown{ margin-top:56px; display:flex; gap:14px; flex-wrap:wrap; }
+  .cd-cell{
+    width:104px; padding:16px 0 14px; text-align:center; border-radius:var(--radius);
+    background:var(--glass-bg); backdrop-filter:blur(14px); border:1px solid var(--line); position:relative; overflow:hidden;
+  }
+  .cd-cell::before{
+    content:''; position:absolute; left:0; right:0; top:0; height:1px;
+    background:linear-gradient(90deg, transparent, var(--teal), transparent);
+    animation:scanline 3s linear infinite;
+  }
+  @keyframes scanline{ 0%{transform:translateY(0);} 100%{transform:translateY(64px);} }
+  .cd-cell .num{ font-family:var(--mono); font-size:34px; font-weight:600; color:var(--teal); font-variant-numeric:tabular-nums; }
+  .cd-cell .lab{ font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-500); margin-top:6px; }
+  .cd-note{ font-family:var(--mono); font-size:11px; color:var(--ink-700); margin-top:10px; letter-spacing:0.04em; }
+  .brochure-chip{
+    display:inline-flex; align-items:center; gap:8px; margin-top:26px; padding:10px 20px; border-radius:999px;
+    background:var(--grad-primary); color:var(--navy-950); font-family:var(--mono); font-size:11px;
+    font-weight:700; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 6px 20px rgba(167,139,250,0.35);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .brochure-chip:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(244,114,182,0.45); }
+
+  /* ---------- marquee ticker ---------- */
+  .marquee{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--navy-900); overflow:hidden; white-space:nowrap; position:relative; z-index:2; }
+  .marquee-track{ display:inline-flex; animation:scroll-left 26s linear infinite; }
+  .marquee:hover .marquee-track{ animation-play-state:paused; }
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  .marquee-item{
+    display:inline-flex; align-items:center; gap:14px; padding:16px 34px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-500);
+  }
+  .marquee-item b{color:var(--amber); font-weight:600;}
+  .marquee-item .sep{color:var(--line-strong);}
+
+  /* ================= PRESENTED BY STRIP ================= */
+  .strip{ border-bottom:1px solid var(--line); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); position:relative; z-index:2; }
+  .strip .wrap{ display:flex; align-items:center; gap:40px; padding:26px 28px; flex-wrap:wrap; justify-content:space-between; }
+  .strip .label{ font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-700); flex-shrink:0; }
+  .badge-row{display:flex; gap:34px; flex-wrap:wrap;}
+  .badge{ font-family:var(--disp); font-weight:600; font-size:15px; color:var(--ink-300); display:flex; align-items:center; gap:10px; transition:color .2s ease; }
+  .badge .logo{ width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0; border:1px solid var(--line-strong); background:#fff; }
+  .badge:hover{ color:var(--teal); }
+  .badge .sq{width:6px;height:6px; background:var(--teal);}
+
+  /* ================= ABOUT ================= */
+  .about{padding:130px 0 100px;}
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .about-card{ padding:40px 36px; }
+  .about-card h3{font-size:22px; margin-bottom:16px; display:flex; align-items:center; gap:10px;}
+  .about-card h3 .n{color:var(--teal); font-family:var(--mono); font-size:14px;}
+  .about-card p{color:var(--ink-500); font-size:15px;}
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-top:none; }
+  .stat-row-4{ grid-template-columns:repeat(4,1fr); }
+  .stat{ padding:26px 30px; border-right:1px solid var(--line); }
+  .stat:last-child{border-right:none;}
+  .stat .v{font-family:var(--disp); font-size:28px; color:var(--amber); font-weight:700; font-variant-numeric:tabular-nums;}
+  .stat .k{font-family:var(--mono); font-size:11px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;}
+
+  /* ================= HOW IT WORKS ================= */
+  .process{padding:100px 0; border-top:1px solid var(--line);}
+  .process-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .process-card{ padding:30px 26px; position:relative; }
+  .process-card .pn{ font-family:var(--mono); font-size:26px; color:var(--line-strong); font-weight:700; margin-bottom:24px; }
+  .process-card h4{font-size:16px; margin-bottom:8px;}
+  .process-card p{color:var(--ink-500); font-size:13.5px;}
+  .process-card::after{
+    content:''; position:absolute; top:44px; right:-1px; width:1px; height:1px;
+  }
+  .process-arrow{ position:absolute; top:38px; right:-11px; width:22px; height:1px; background:var(--line-strong); z-index:3; }
+  .process-arrow::after{ content:'▸'; position:absolute; right:-6px; top:-7px; color:var(--line-strong); font-size:12px; }
+  @media (max-width:900px){ .process-arrow{ display:none; } }
+
+  /* ================= THEMES ================= */
+  .themes{padding:100px 0;}
+  .theme-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .theme-card{
+    background:var(--navy-950); padding:34px 30px; transition:background .2s ease, transform .2s ease;
+    transform-style:preserve-3d; will-change:transform;
+  }
+  .theme-card:hover{background:var(--navy-900);}
+  .theme-icon{
+    width:42px; height:42px; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; color:var(--teal); transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .theme-card:hover .theme-icon{ border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-dim); }
+  .theme-icon svg{width:20px; height:20px;}
+  .theme-card h4{font-size:17px; margin-bottom:8px;}
+  .theme-card p{color:var(--ink-500); font-size:14px;}
+
+  /* ================= PRIZES ================= */
+  .prizes{padding:100px 0; border-top:1px solid var(--line);}
+  .prize-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:1px; }
+  .prize-card{ padding:34px 28px; position:relative; }
+  .prize-card.first{ background:linear-gradient(180deg, rgba(255,178,56,0.06), transparent 60%); }
+  .prize-rank{ font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-700); margin-bottom:20px; }
+  .prize-card.first .prize-rank{ color:var(--amber); }
+  .prize-card h4{ font-size:24px; margin-bottom:10px; }
+  .prize-card p{ color:var(--ink-500); font-size:14px; }
+  .perks-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px; }
+  .perk{ padding:22px 24px; border-right:1px solid var(--line); font-size:13px; color:var(--ink-300); display:flex; gap:10px; align-items:flex-start; }
+  .perk:last-child{border-right:none;}
+  .perk svg{ width:16px; height:16px; color:var(--teal); flex-shrink:0; margin-top:2px; }
+
+  /* ================= RULES ================= */
+  .rules{padding:100px 0;}
+  .rules-layout{display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px;}
+  .rules-list{border-top:1px solid var(--line);}
+  .rule-item{ display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-bottom:1px solid var(--line); }
+  .rule-item .idx{font-family:var(--mono); color:var(--amber); font-size:13px; padding-top:2px;}
+  .rule-item p{color:var(--ink-300); font-size:15px;}
+  .spec-panel{ padding:36px; }
+  .spec-panel h4{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-500); margin-bottom:24px;}
+  .spec-row{display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-row span:first-child{color:var(--ink-500);}
+  .spec-row span:last-child{font-family:var(--mono); color:var(--ink-100);}
+
+  /* ================= TIMELINE ================= */
+  .timeline{padding:100px 0;}
+  .tl{position:relative; padding-left:36px; margin-top:20px;}
+  .tl::before{
+    content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    background:repeating-linear-gradient(to bottom, var(--line-strong) 0 6px, transparent 6px 12px);
+  }
+  .tl::after{
+    content:''; position:absolute; left:5px; top:6px; width:1px; height:var(--fill,0%);
+    background:var(--teal); box-shadow:0 0 8px var(--teal); transition:height .1s linear;
+  }
+  .tl-item{position:relative; padding-bottom:46px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:''; position:absolute; left:-36px; top:4px; width:11px; height:11px;
+    background:var(--navy-950); border:2px solid var(--teal); border-radius:50%; transition:box-shadow .2s ease;
+  }
+  .tl-item.passed::before{ box-shadow:0 0 0 4px var(--teal-dim); }
+  .tl-date{font-family:var(--mono); font-size:12px; color:var(--amber); letter-spacing:0.06em; margin-bottom:6px;}
+  .tl-item h4{font-size:18px; margin-bottom:6px;}
+  .tl-item p{color:var(--ink-500); font-size:14px; max-width:520px;}
+
+  /* ================= ORGANIZERS ================= */
+  .organizers{padding:100px 0; border-top:1px solid var(--line);}
+  .org-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .org-card{ padding:28px 24px; text-align:left; }
+  .org-avatar{
+    min-width:44px; height:44px; padding:0 12px; border:1px solid var(--line-strong); display:inline-flex; align-items:center; justify-content:center;
+    margin-bottom:18px; color:var(--amber); font-family:var(--mono); font-size:13px; white-space:nowrap;
+  }
+  .org-card h4{font-size:15px; margin-bottom:4px;}
+  .org-card p{color:var(--ink-500); font-size:13px;}
+
+  /* ================= FAQ ================= */
+  .faq{padding:100px 0;}
+  .faq-list{border-top:1px solid var(--line); max-width:820px;}
+  details{border-bottom:1px solid var(--line);}
+  summary{
+    padding:24px 4px; cursor:pointer; list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:20px;
+    font-family:var(--disp); font-size:16px; font-weight:500; color:var(--ink-100);
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{ color:var(--teal); }
+  summary .plus{ font-family:var(--mono); color:var(--teal); font-size:18px; flex-shrink:0; transition:transform .2s ease; }
+  details[open] summary .plus{transform:rotate(45deg);}
+  .faq-a{padding:0 4px 26px; color:var(--ink-500); font-size:14px; max-width:640px;}
+
+  /* ================= CTA / REGISTER ================= */
+  .cta{
+    padding:110px 0; text-align:center; border-top:1px solid var(--line);
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, rgba(255,178,56,0.08), transparent);
+  }
+  .cta h2{font-size:clamp(30px,5vw,52px); max-width:720px; margin:0 auto 18px;}
+  .cta p{color:var(--ink-500); max-width:480px; margin:0 auto 40px;}
+  .cta-actions{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+  .cta-contact{ margin-top:36px; font-family:var(--mono); font-size:13px; color:var(--ink-500); }
+  .cta-contact button{
+    background:none; border:none; color:var(--teal); font-family:var(--mono); font-size:13px;
+    cursor:pointer; text-decoration:underline; text-underline-offset:3px;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .about-grid,.theme-grid,.prize-grid{grid-template-columns:1fr;}
+    .stat-row{grid-template-columns:1fr;}
+    .stat-row-4{grid-template-columns:1fr 1fr;}
+    .stat{border-right:none; border-bottom:1px solid var(--line);}
+    .rules-layout{grid-template-columns:1fr;}
+    .strip .wrap{flex-direction:column; align-items:flex-start; gap:18px;}
+    .perks-row{grid-template-columns:1fr 1fr;}
+    .perk{border-bottom:1px solid var(--line);}
+    .process-grid, .org-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .cd-cell{width:76px; padding:12px 0 10px;}
+    .cd-cell .num{font-size:24px;}
+    .perks-row{grid-template-columns:1fr;}
+    .process-grid, .org-grid{grid-template-columns:1fr;}
+    .stat-row-4{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="loader" aria-hidden="true">
+  <svg viewBox="0 0 100 100">
+    <path d="M10 10h80v80h-80z"/>
+    <circle cx="50" cy="50" r="19"/>
+  </svg>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="blob-layer" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a href="#home" class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <span>PDC '26<small>MSEC</small></span>
+    </a>
+    <nav class="links" aria-label="Primary">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#themes">Themes</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#rules">Rules</a>
+      <a href="#faq">FAQ</a>
+      <a href="result.html" style="color:var(--teal);">Results</a>
+      <a href="register.html" class="nav-cta">Register</a>
+    </nav>
+    <button class="burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div id="mobileMenu" style="display:none; position:fixed; inset:72px 0 0 0; background:var(--navy-950); z-index:99; padding:20px 28px;">
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#themes">Themes</a>
+  <a href="#schedule">Schedule</a>
+  <a href="#rules">Rules</a>
+  <a href="#faq">FAQ</a>
+  <a href="result.html">Results</a>
+  <a href="register.html">Register</a>
+</div>
+
+<main id="home">
+
+  <section class="hero">
+    <div class="spotlight" id="spotlight"></div>
+    <svg class="hero-circuit" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 120 H320 V60 H700 V220 H1200"/>
+      <path d="M0 420 H180 V520 H560 V380 H1200"/>
+      <path d="M900 0 V160 H1200"/>
+      <path d="M0 620 H240 V560 H420"/>
+      <circle cx="320" cy="120" r="3"/>
+      <circle cx="700" cy="220" r="3"/>
+      <circle cx="180" cy="420" r="3"/>
+      <circle cx="560" cy="380" r="3"/>
+      <circle cx="900" cy="160" r="3"/>
+      <circle cx="420" cy="560" r="3"/>
+    </svg>
+    <div class="wrap">
+      <p class="presents">Meenakshi Sundararajan Engineering College &nbsp;/&nbsp; Affiliated to Anna University · NBA &amp; AICTE Accredited</p>
+      <h1 class="reveal in">Product Design<br>Challenge <em>'26</em></h1>
+      <p class="hero-sub">A 30-hour build sprint where blueprints become working products. Submit your idea, get shortlisted, and pitch a real solution across five problem statement categories — building, moving, wiring, innovating together.</p>
+
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-solid">Register Your Team →</a>
+        <a href="result.html" class="btn btn-ghost">View Shortlisted Teams</a>
+      </div>
+
+      <div class="countdown" id="countdown" aria-label="Countdown to hackathon start">
+        <div class="cd-cell"><div class="num" id="cd-days">00</div><div class="lab">Days</div></div>
+        <div class="cd-cell"><div class="num" id="cd-hours">00</div><div class="lab">Hours</div></div>
+        <div class="cd-cell"><div class="num" id="cd-mins">00</div><div class="lab">Minutes</div></div>
+        <div class="cd-cell"><div class="num" id="cd-secs">00</div><div class="lab">Seconds</div></div>
+      </div>
+      <p class="cd-note">// countdown to the idea submission deadline — 25 Aug 2026</p>
+
+      <a href="brochure.jpg" class="brochure-chip">⬇ Download Brochure</a>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-item"><b>30 HRS</b> NON-STOP BUILD <span class="sep">◆</span></span>
+      <span class="marquee-item">TEAMS OF <b>4</b> <span class="sep">◆</span></span>
+      <span class="marquee-item">ROBOTICS <span class="sep">·</span> IOT <span class="sep">·</span> SUSTAINABILITY <span class="sep">◆</span></span>
+      <span class="marquee-item"><b>APPLICATIONS OPEN</b> <span class="sep">◆</span></span>
+      <span class="marquee-item">WHERE INNOVATION MEETS IMPACT <span class="sep">◆</span></span>
+      <span class="marquee-item"><b>30 HRS</b> NON-STOP BUILD <span class="sep">◆</span></span>
+      <span class="marquee-item">TEAMS OF <b>4</b> <span class="sep">◆</span></span>
+      <span class="marquee-item">ROBOTICS <span class="sep">·</span> IOT <span class="sep">·</span> SUSTAINABILITY <span class="sep">◆</span></span>
+      <span class="marquee-item"><b>APPLICATIONS OPEN</b> <span class="sep">◆</span></span>
+      <span class="marquee-item">WHERE INNOVATION MEETS IMPACT <span class="sep">◆</span></span>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="wrap">
+      <span class="label">Accredited by</span>
+      <div class="badge-row">
+        <span class="badge"><span class="sq"></span>NBA</span>
+        <span class="badge"><span class="sq"></span>AICTE</span>
+        <span class="badge"><span class="sq"></span>TNEA — Code 1309</span>
+        <span class="badge"><span class="sq"></span>Institution's Innovation Council</span>
+      </div>
+    </div>
+  </div>
+  <div class="strip">
+    <div class="wrap">
+      <span class="label">In collaboration with</span>
+      <div class="badge-row">
+        <span class="badge"><img class="logo" src="logo-nodenova.png" alt="Nodenova IoT Club logo">Nodenova IoT Club</span>
+        <span class="badge"><img class="logo" src="logo-ecodesign.png" alt="Eco-Design Club logo">Eco-Design Club</span>
+        <span class="badge"><img class="logo" src="logo-renewables.png" alt="Renewables Club logo">Renewables Club</span>
+        <span class="badge"><img class="logo" src="logo-productdev.png" alt="Product Development Club logo">Product Development Club</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="about" id="about">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 01</span> About</span>
+      <h2 class="section-title reveal">Building, moving, wiring — innovate together.</h2>
+      <p class="section-lede reveal">The institution and the premise behind Product Design Challenge '26.</p>
+
+      <div class="about-grid reveal">
+        <div class="about-card glass">
+          <h3><span class="n">01</span> Meenakshi Sundararajan Engineering College</h3>
+          <p>An autonomous institution affiliated to Anna University, accredited by NBA and AICTE (TNEA Code 1309). This challenge runs under the campus's Institution's Innovation Council, in collaboration with Nodenova, the Renewables Club, the Product Development Club, and the Eco-Design Club.</p>
+        </div>
+        <div class="about-card glass">
+          <h3><span class="n">02</span> The Challenge</h3>
+          <p>Product Design Challenge '26 is a 30-hour hackathon where teams take on real-world problem statements — not limited to digital systems, power, production, industry, or urban design. Submit your idea, get shortlisted, and build it out over 30 hours on campus.</p>
+        </div>
+      </div>
+
+      <div class="stat-row stat-row-4 reveal">
+        <div class="stat"><div class="v" data-count="30" data-suffix=" Hrs">0 Hrs</div><div class="k">Non-stop building</div></div>
+        <div class="stat"><div class="v" data-count="4" data-pad="2">00</div><div class="k">Members per team</div></div>
+        <div class="stat"><div class="v" data-count="15000" data-prefix="₹">₹0</div><div class="k">Prize pool</div></div>
+        <div class="stat"><div class="v" data-count="250" data-prefix="₹">₹0</div><div class="k">Per shortlisted member</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process" id="process">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 02</span> How It Works</span>
+      <h2 class="section-title reveal">From blueprint to build, in four stages.</h2>
+      <p class="section-lede reveal">The same arc every team follows across the 30 hours.</p>
+
+      <div class="process-grid reveal">
+        <div class="process-card glass"><div class="pn">01</div><h4>Ideate</h4><p>Pick your theme, frame the problem, and sketch the product direction with your team.</p><span class="process-arrow"></span></div>
+        <div class="process-card glass"><div class="pn">02</div><h4>Build</h4><p>Design and develop your prototype with mentors checking in throughout.</p><span class="process-arrow"></span></div>
+        <div class="process-card glass"><div class="pn">03</div><h4>Refine</h4><p>Test, polish, and prepare a working demo alongside your pitch deck.</p><span class="process-arrow"></span></div>
+        <div class="process-card glass"><div class="pn">04</div><h4>Pitch</h4><p>Present your product to the judging panel and answer the hard questions.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="themes" id="themes">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 03</span> Problem Statements</span>
+      <h2 class="section-title reveal">Five categories to build in.</h2>
+      <p class="section-lede reveal">Not limited to these — bring a strong idea from anywhere and we'll help you place it.</p>
+
+      <div class="theme-grid reveal-stagger">
+        <div class="theme-card glass reveal" style="--i:0">
+          <div class="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M4 9h2M4 15h2M18 9h2M18 15h2M9 4v2M15 4v2M9 18v2M15 18v2"/></svg></div>
+          <h4>Digital Synergy</h4>
+          <p>Software and connected systems that bring people, devices, and data together.</p>
+        </div>
+        <div class="theme-card glass reveal" style="--i:1">
+          <div class="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+          <h4>Power Nexus</h4>
+          <p>Energy generation, storage, and distribution — smarter, cleaner, more efficient.</p>
+        </div>
+        <div class="theme-card glass reveal" style="--i:2">
+          <div class="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M9 8V5a3 3 0 016 0v3"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></svg></div>
+          <h4>Smart Production</h4>
+          <p>Automation, robotics, and process innovation for how things get made.</p>
+        </div>
+        <div class="theme-card glass reveal" style="--i:3">
+          <div class="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M6 21V9l6-4 6 4v12M10 21v-6h4v6"/></svg></div>
+          <h4>Industry Innovation</h4>
+          <p>Tools and platforms that make existing industries faster, safer, or more capable.</p>
+        </div>
+        <div class="theme-card glass reveal" style="--i:4">
+          <div class="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V10l4-3v14M13 21V6l4 2v13M9 13h.01M9 16h.01"/></svg></div>
+          <h4>Urban Regeneration</h4>
+          <p>Rethinking city infrastructure, spaces, and services for how people actually live.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="prizes" id="prizes">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 04</span> Prizes &amp; Perks</span>
+      <h2 class="section-title reveal">₹15,000 prize pool.</h2>
+      <p class="section-lede reveal">Shared across the standout teams, with certificates and recognition for every participant.</p>
+
+      <div class="reveal" style="border:1px solid var(--line); padding:44px 40px; text-align:center; background:linear-gradient(180deg, rgba(255,178,56,0.08), transparent 70%); margin-bottom:1px;">
+        <div style="font-family:var(--mono); font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:14px;">Total prize pool</div>
+        <div class="gradient-text" style="font-family:var(--disp); font-size:clamp(40px,6vw,64px); font-weight:800;">₹15,000</div>
+        <p style="color:var(--ink-500); font-size:14px; margin-top:12px; max-width:420px; margin-left:auto; margin-right:auto;">Split across winning teams — final breakdown announced with the judging results.</p>
+      </div>
+      <div class="perks-row reveal">
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Certificates for every participant</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Mentorship from industry experts</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Hands-on exposure to IoT hardware &amp; tools</div>
+        <div class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Networking with fellow builders</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rules" id="rules">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 05</span> Rules &amp; Regulations</span>
+      <h2 class="section-title reveal">What's expected, in plain terms.</h2>
+
+      <div class="rules-layout">
+        <div class="reveal">
+          <div class="rules-list">
+            <div class="rule-item"><span class="idx">01</span><p>Each team must have exactly 4 members — interdisciplinary teams are entertained.</p></div>
+            <div class="rule-item"><span class="idx">02</span><p>All work must be original and developed entirely during the hackathon.</p></div>
+            <div class="rule-item"><span class="idx">03</span><p>Participants must bring their own necessities — laptop, cables, chargers, and so on.</p></div>
+            <div class="rule-item"><span class="idx">04</span><p>Formal attire and a valid ID card are mandatory throughout the event.</p></div>
+            <div class="rule-item"><span class="idx">05</span><p>Shortlisted teams must submit an undertaking form before the event.</p></div>
+            <div class="rule-item"><span class="idx">06</span><p>A fee of ₹250 per member is collected from shortlisted teams only.</p></div>
+          </div>
+          <div class="note-box">⚠ NOTE — Nothing is charged at registration. The ₹250-per-member fee applies only once your team is shortlisted, due by 7 Sep 2026.</div>
+        </div>
+
+        <div class="spec-panel glass reveal">
+          <h4>Quick Spec</h4>
+          <div class="spec-row"><span>Format</span><span>Offline, on-campus</span></div>
+          <div class="spec-row"><span>Duration</span><span>30 hours</span></div>
+          <div class="spec-row"><span>Team size</span><span>4 members</span></div>
+          <div class="spec-row"><span>Team type</span><span>Interdisciplinary welcome</span></div>
+          <div class="spec-row"><span>Dress code</span><span>Formals + ID card</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="judging" id="judging" style="padding:100px 0; border-top:1px solid var(--line);">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 06</span> Judging Criteria</span>
+      <h2 class="section-title reveal">How submissions are scored.</h2>
+      <p class="section-lede reveal">A general guide to what the panel looks for — official weightings are set by the judges on the day.</p>
+
+      <div class="reveal" style="max-width:720px;">
+        <div class="criteria-item">
+          <div class="criteria-top"><h4>Innovation &amp; Originality</h4><span>High priority</span></div>
+          <div class="criteria-track"><div class="criteria-fill" data-fill="90"></div></div>
+          <p class="criteria-desc">Is the idea genuinely novel, or a fresh angle on an existing problem?</p>
+        </div>
+        <div class="criteria-item">
+          <div class="criteria-top"><h4>Technical Execution</h4><span>High priority</span></div>
+          <div class="criteria-track"><div class="criteria-fill" data-fill="90"></div></div>
+          <p class="criteria-desc">Does the prototype actually work, and how well is it engineered?</p>
+        </div>
+        <div class="criteria-item">
+          <div class="criteria-top"><h4>Design &amp; User Experience</h4><span>Key factor</span></div>
+          <div class="criteria-track"><div class="criteria-fill" data-fill="70"></div></div>
+          <p class="criteria-desc">Is it usable, coherent, and thoughtfully put together?</p>
+        </div>
+        <div class="criteria-item">
+          <div class="criteria-top"><h4>Impact &amp; Feasibility</h4><span>Key factor</span></div>
+          <div class="criteria-track"><div class="criteria-fill" data-fill="70"></div></div>
+          <p class="criteria-desc">Does it solve a real problem, and could it realistically be built out further?</p>
+        </div>
+        <div class="criteria-item">
+          <div class="criteria-top"><h4>Pitch &amp; Presentation</h4><span>Considered</span></div>
+          <div class="criteria-track"><div class="criteria-fill" data-fill="50"></div></div>
+          <p class="criteria-desc">Can the team explain what they built and why it matters, clearly and confidently?</p>
+        </div>
+        <p class="form-note" style="margin-top:4px;">// Bar length reflects relative emphasis, not an official published score split.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline" id="timeline">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 07</span> Timeline</span>
+      <h2 class="section-title reveal">Key dates to note.</h2>
+      <p class="section-lede reveal">Three confirmed deadlines between now and the hackathon itself.</p>
+
+      <div class="tl" id="tlWrap">
+        <div class="tl-item"><div class="tl-date">25 Aug 2026</div><h4>Idea submission deadline</h4><p>Last date to submit your team's idea for consideration.</p></div>
+        <div class="tl-item"><div class="tl-date">31 Aug 2026</div><h4>Shortlisted list announcement</h4><p>Selected teams are announced — check the <a href="result.html" style="color:var(--teal); text-decoration:underline;">Results page</a>.</p></div>
+        <div class="tl-item"><div class="tl-date">7 Sep 2026</div><h4>Registration fee deadline</h4><p>Shortlisted teams pay ₹250 per member and submit their undertaking form.</p></div>
+        <div class="tl-item"><div class="tl-date">TBA</div><h4>Hackathon — 30 hours</h4><p>Exact dates shared directly with shortlisted teams.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="schedule" id="schedule" style="padding:100px 0; border-top:1px solid var(--line);">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 08</span> Evaluation Timeline</span>
+      <h2 class="section-title reveal">PDC evaluation timeline.</h2>
+      <p class="section-lede reveal">How your build gets scored, from release to the final round.</p>
+
+      <div class="tl reveal">
+        <div class="tl-item"><div class="tl-date">12 Sep 2026 · 9:30 AM</div><h4>Problem statement release</h4><p>Problem statements are released to all participants.</p></div>
+        <div class="tl-item"><div class="tl-date">12 Sep 2026 · 5:00 PM</div><h4>Evaluation 1 — Technical implementation</h4><p>Scored on the technical implementation of the given problem statement.</p></div>
+        <div class="tl-item"><div class="tl-date">13 Sep 2026 · 12:00 AM</div><h4>Evaluation 2 — Prototype evaluation</h4><p>Scored on prototype development of the project.</p></div>
+        <div class="tl-item"><div class="tl-date">13 Sep 2026 · 6:00 AM</div><h4>Evaluation 3 — Complete project evaluation</h4><p>Final internal round; scores from all three evaluations are combined, and the top 7 teams by average score are shortlisted.</p></div>
+        <div class="tl-item"><div class="tl-date">13 Sep 2026 · 8:30 AM</div><h4>Final evaluation — External evaluators</h4><p>The shortlisted top 7 teams present to external evaluators for final judging.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="venue" id="venue" style="padding:100px 0; border-top:1px solid var(--line);">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 09</span> Venue &amp; Logistics</span>
+      <h2 class="section-title reveal">Where to be, and what to bring.</h2>
+      <p class="section-lede reveal">On-campus at Meenakshi Sundararajan Engineering College.</p>
+
+      <iframe class="map-frame reveal" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=Meenakshi%20Sundararajan%20Engineering%20College%2C%20Chennai&t=&z=15&ie=UTF8&iwloc=&output=embed"
+        title="Venue map — Meenakshi Sundararajan Engineering College"></iframe>
+
+      <div class="logistics-list reveal" style="margin-top:1px;">
+        <div class="logistics-item glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><h5>Address</h5><p>Meenakshi Sundararajan Engineering College, Chennai, Tamil Nadu — full campus map on the brochure.</p></div>
+        </div>
+        <div class="logistics-item glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.68 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0122 16.92z"/></svg>
+          <div>
+            <h5>Emergency contact</h5>
+            <p>Akash V — <a href="tel:+919042080634" style="color:var(--teal); text-decoration:underline;">+91 90420 80634</a><br>Sathish R — <a href="tel:+918778154450" style="color:var(--teal); text-decoration:underline;">+91 87781 54450</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="organizers" id="organizers">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 10</span> Organizers</span>
+      <h2 class="section-title reveal">Who's running the show.</h2>
+      <p class="section-lede reveal">Faculty coordinators from the Institution's Innovation Council keeping the 30 hours on track.</p>
+
+      <div class="org-grid reveal">
+        <div class="org-card glass"><div class="org-avatar">ECE</div><h4>Mrs. S. Nadhiya</h4><p>MSIIC Coordinator — Electronics and Communication Engineering</p></div>
+        <div class="org-card glass"><div class="org-avatar">MECH</div><h4>Dr. T. Parakaran</h4><p>MSIIC Coordinator — Mechanical Engineering</p></div>
+        <div class="org-card glass"><div class="org-avatar">CIVIL</div><h4>Mr. Saravanan</h4><p>MSIIC Coordinator — Civil Engineering</p></div>
+        <div class="org-card glass"><div class="org-avatar">EEE</div><h4>Mr. C. Venkatesh</h4><p>MSIIC Coordinator — Electrical and Electronics Engineering</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="conduct" id="conduct" style="padding:100px 0; border-top:1px solid var(--line);">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 11</span> Code of Conduct</span>
+      <h2 class="section-title reveal">A safe, respectful build environment.</h2>
+      <p class="section-lede reveal">Applies to every participant, mentor, judge, volunteer, and organizer, for the full 30 hours.</p>
+
+      <div class="rules-layout reveal">
+        <div>
+          <div class="rules-list">
+            <div class="rule-item"><span class="idx">01</span><p>Treat everyone with respect — harassment, discrimination, or bullying of any kind will not be tolerated.</p></div>
+            <div class="rule-item"><span class="idx">02</span><p>Respect venue property, equipment, and quiet hours in shared spaces.</p></div>
+            <div class="rule-item"><span class="idx">03</span><p>Give credit where it's due — plagiarized code, designs, or ideas will result in disqualification.</p></div>
+            <div class="rule-item"><span class="idx">04</span><p>Look out for your teammates — get rest, stay hydrated, and ask organizers for help if you need it.</p></div>
+          </div>
+        </div>
+        <div class="spec-panel glass">
+          <h4>Report a concern</h4>
+          <p style="color:var(--ink-300); font-size:14px; margin-bottom:20px;">If something feels wrong, tell any organizer or volunteer immediately — they're identifiable by their event lanyards. All reports are handled promptly and discreetly.</p>
+          <div class="spec-row"><span>On-site</span><span>Any lanyarded volunteer</span></div>
+          <div class="spec-row"><span>Email</span><span>pdc2k26.msec@gmail.com</span></div>
+          <div class="spec-row"><span>Akash V</span><span>+91 90420 80634</span></div>
+          <div class="spec-row"><span>Sathish R</span><span>+91 87781 54450</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 12</span> FAQ</span>
+      <h2 class="section-title reveal">Good to know before you apply.</h2>
+
+      <div class="faq-list reveal">
+        <details name="faq"><summary>Who can participate?<span class="plus">+</span></summary><div class="faq-a">Anyone with basic coding knowledge can take part — you don't need to be an expert to apply.</div></details>
+        <details name="faq"><summary>Can first-year students join?<span class="plus">+</span></summary><div class="faq-a">Yes. First-year students are welcome to form or join a team.</div></details>
+        <details name="faq"><summary>How do I register?<span class="plus">+</span></summary><div class="faq-a">Head to the <a href="register.html" style="color:var(--teal); text-decoration:underline;">registration page</a> and fill in your team's details — it takes about five minutes.</div></details>
+        <details name="faq"><summary>What should I bring?<span class="plus">+</span></summary><div class="faq-a">Your laptop and any hardware or cables your build needs.</div></details>
+        <details name="faq"><summary>Are there prizes?<span class="plus">+</span></summary><div class="faq-a">Yes — there's a ₹15,000 prize pool shared across the standout teams, plus certificates for every participant.</div></details>
+        <details name="faq"><summary>Is there a participation fee?<span class="plus">+</span></summary><div class="faq-a">Only shortlisted teams pay — a nominal ₹250 per member, collected after selection.</div></details>
+        <details name="faq"><summary>How do I check if my team was shortlisted?<span class="plus">+</span></summary><div class="faq-a">Head to the Results page and search for your team name or code — it's linked in the nav bar and hero.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact" style="padding:100px 0; border-top:1px solid var(--line);">
+    <div class="wrap">
+      <span class="tag reveal"><span class="idx">FIG. 13</span> Contact</span>
+      <h2 class="section-title reveal">Still have a question?</h2>
+      <p class="section-lede reveal">Send it straight to the organizing team — this opens a pre-filled email, no account needed.</p>
+
+      <form id="contactForm" class="reveal" style="max-width:640px;" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="cName">Your name<span class="req">*</span></label>
+            <input type="text" id="cName" required placeholder="Full name">
+            <div class="field-error">Please enter your name.</div>
+          </div>
+          <div class="field">
+            <label for="cEmail">Your email<span class="req">*</span></label>
+            <input type="email" id="cEmail" required placeholder="you@example.com">
+            <div class="field-error">Please enter a valid email address.</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cMsg">Message<span class="req">*</span></label>
+          <textarea id="cMsg" required placeholder="What do you need help with?"></textarea>
+          <div class="field-error">Please enter a message.</div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-solid">Send Message →</button>
+        </div>
+        <p class="form-note">// Opens your email app with this filled in, addressed to pdc2k26.msec@gmail.com</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="cta" id="register-cta">
+    <div class="wrap reveal">
+      <span class="tag" style="justify-content:center;"><span class="idx">FIG. 14</span> Get in</span>
+      <h2>30 hours. One product.<br>Make it count.</h2>
+      <p>Read the brochure for the full theme list, judging criteria, and confirmed dates — then bring your team.</p>
+      <div class="cta-actions">
+        <a href="register.html" class="btn btn-solid">Register Your Team →</a>
+        <a href="brochure.jpg" class="btn btn-ghost">Download Brochure ↓</a>
+        <a href="result.html" class="btn btn-ghost">View Shortlisted Teams</a>
+      </div>
+      <p class="cta-contact">Questions? <button id="copyEmail" type="button">pdc2k26.msec@gmail.com</button> <span id="copyMsg" style="color:var(--teal); opacity:0;"> — copied</span></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="foot-brand">Product Design Challenge '26</div>
+        <p class="foot-desc">A 30-hour hackathon at Meenakshi Sundararajan Engineering College — building, moving, wiring, innovating together.</p>
+        <div class="foot-meta">Affiliated to Anna University — Autonomous Institution</div>
+      </div>
+      <div class="foot-col">
+        <h5>Event</h5>
+        <a href="#about">About</a>
+        <a href="#themes">Themes</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#venue">Venue</a>
+      </div>
+      <div class="foot-col">
+        <h5>Participate</h5>
+        <a href="register.html">Register</a>
+        <a href="result.html">Results</a>
+        <a href="#rules">Rules</a>
+        <a href="#judging">Judging</a>
+      </div>
+      <div class="foot-col">
+        <h5>Info</h5>
+        <a href="#faq">FAQ</a>
+        <a href="#conduct">Code of Conduct</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="foot-row">
+      <div class="foot-meta">© 2026 Product Design Challenge — Meenakshi Sundararajan Engineering College</div>
+      <div class="foot-links"><a href="#home">Home</a><a href="register.html">Register</a></div>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script src="anime.min.js"></script>
+<script src="common.js"></script>
+<script>
+  // ---- countdown (target: idea submission deadline, 25 Aug 2026) ----
+  const target = new Date('2026-08-25T23:59:59+05:30').getTime();
+  const els = { d: document.getElementById('cd-days'), h: document.getElementById('cd-hours'), m: document.getElementById('cd-mins'), s: document.getElementById('cd-secs') };
+  function tick(){
+    let diff = Math.max(0, target - Date.now());
+    const day = Math.floor(diff / 86400000); diff -= day*86400000;
+    const hr  = Math.floor(diff / 3600000);  diff -= hr*3600000;
+    const min = Math.floor(diff / 60000);    diff -= min*60000;
+    const sec = Math.floor(diff / 1000);
+    els.d.textContent = String(day).padStart(2,'0');
+    els.h.textContent = String(hr).padStart(2,'0');
+    els.m.textContent = String(min).padStart(2,'0');
+    els.s.textContent = String(sec).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ---- hero entrance: createTimeline + stagger (anime.js modules) ----
+  (function heroEntrance(){
+    if (!hasAnimeLib || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+
+    // split the headline into individual character spans for a letter-by-letter reveal
+    const h1 = document.querySelector('.hero h1');
+    h1.querySelectorAll('span, em').forEach(() => {}); // no-op guard
+    const walk = (node) => {
+      node.childNodes.forEach(child => {
+        if (child.nodeType === 3 && child.textContent.trim()){
+          const frag = document.createDocumentFragment();
+          child.textContent.split('').forEach(ch => {
+            const span = document.createElement('span');
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            span.style.display = 'inline-block';
+            frag.appendChild(span);
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1){
+          walk(child);
+        }
+      });
+    };
+    walk(h1);
+    const chars = h1.querySelectorAll('span');
+
+    const tl = createTimeline({ defaults: { ease: 'outExpo' } });
+    tl.add('.blob', { opacity: [0, 0.55], duration: 900 })
+      .add('.hero .presents', { opacity: [0, 1], translateY: [14, 0], duration: 500 }, '-=600')
+      .add(chars, { opacity: [0, 1], translateY: [24, 0], duration: 500, delay: stagger(14) }, '-=250')
+      .add('.hero .hero-sub', { opacity: [0, 1], translateY: [16, 0], duration: 550 }, '-=250')
+      .add('.hero-actions', { opacity: [0, 1], translateY: [16, 0], duration: 550 }, '-=350')
+      .add('.cd-cell', { opacity: [0, 1], translateY: [16, 0], scale: [0.9, 1], duration: 500, delay: stagger(70) }, '-=350')
+      .add('.cd-note', { opacity: [0, 1], duration: 400 }, '-=150')
+      .add('.brochure-chip', { opacity: [0, 1], translateY: [12, 0], duration: 450 }, '-=150');
+  })();
+
+  // ---- hero cursor spotlight ----
+  const hero = document.querySelector('.hero');
+  const spotlight = document.getElementById('spotlight');
+  hero.addEventListener('mousemove', (e) => {
+    const r = hero.getBoundingClientRect();
+    spotlight.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    spotlight.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+
+  // ---- count-up stats (anime.js `animate` module tweening a plain object) ----
+  const statEls = document.querySelectorAll('.stat .v');
+  const statIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const targetVal = parseInt(el.dataset.count, 10);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const pad = parseInt(el.dataset.pad || '0', 10);
+      const counter = { v: 0 };
+      const render = () => {
+        let str = String(Math.round(counter.v));
+        if (pad) str = str.padStart(pad, '0');
+        el.textContent = prefix + str + suffix;
+      };
+      if (hasAnimeLib){
+        animate(counter, { v: targetVal, duration: 1100, ease: 'outCubic', onUpdate: render });
+      } else {
+        counter.v = targetVal; render();
+      }
+      statIO.unobserve(el);
+    });
+  }, { threshold:0.5 });
+  statEls.forEach(el => statIO.observe(el));
+
+  // ---- theme card tilt ----
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(600px) rotateX(${(-py*4).toFixed(2)}deg) rotateY(${(px*4).toFixed(2)}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = 'none'; });
+  });
+
+  // ---- timeline energize fill on scroll ----
+  const tlWrap = document.getElementById('tlWrap');
+  const tlItems = document.querySelectorAll('.tl-item');
+  function updateTimeline(){
+    const r = tlWrap.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const visibleStart = Math.min(Math.max(vh*0.8 - r.top, 0), r.height);
+    const pct = (visibleStart / r.height) * 100;
+    tlWrap.style.setProperty('--fill', pct + '%');
+    tlItems.forEach((item) => {
+      const itemTop = item.offsetTop;
+      item.classList.toggle('passed', (itemTop / r.height) * 100 < pct);
+    });
+  }
+  document.addEventListener('scroll', updateTimeline, { passive:true });
+  window.addEventListener('resize', updateTimeline);
+  updateTimeline();
+
+  // ---- copy email ----
+  const copyBtn = document.getElementById('copyEmail');
+  const copyMsg = document.getElementById('copyMsg');
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('pdc2k26.msec@gmail.com');
+      copyMsg.style.opacity = '1';
+      setTimeout(() => copyMsg.style.opacity = '0', 1600);
+    } catch(e) { /* clipboard unavailable */ }
+  });
+
+  // ---- judging criteria bar fill on scroll (anime.js) ----
+  const criteriaEls = document.querySelectorAll('.criteria-fill');
+  const criteriaIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        const el = entry.target;
+        const fill = el.dataset.fill + '%';
+        if (hasAnimeLib){
+          animate(el, { width: ['0%', fill], duration: 1000, ease: 'outExpo' });
+        } else {
+          el.style.width = fill;
+        }
+        criteriaIO.unobserve(el);
+      }
+    });
+  }, { threshold:0.4 });
+  criteriaEls.forEach(el => criteriaIO.observe(el));
+
+  // ---- contact form (mailto) ----
+  const contactForm = document.getElementById('contactForm');
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+    contactForm.querySelectorAll('[required]').forEach(el => {
+      el.classList.add('touched');
+      const wrap = el.closest('.field');
+      const errorEl = wrap.querySelector('.field-error');
+      const fieldOk = el.type === 'email'
+        ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())
+        : el.value.trim().length > 0;
+      if (!fieldOk){ ok = false; errorEl.classList.add('show'); } else { errorEl.classList.remove('show'); }
+    });
+    if (!ok) return;
+
+    const name = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const msg = document.getElementById('cMsg').value.trim();
+    const body = `From: ${name} (${email})\n\n${msg}`;
+    window.location.href = 'mailto:pdc2k26.msec@gmail.com'
+      + '?subject=' + encodeURIComponent(`PDC'26 enquiry from ${name}`)
+      + '&body=' + encodeURIComponent(body);
+  });
+</script>
+
+</body>
+</html>
